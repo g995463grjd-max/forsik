@@ -3,758 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forsic - Мессенджер</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Forsic - Рабочий чат</title>
     <style>
-        /* Основные стили */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .app-container {
-            width: 1200px;
-            height: 700px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            display: flex;
-            overflow: hidden;
-        }
-        
-        /* Левый сайдбар */
-        .sidebar {
-            width: 300px;
-            background: #f8f9fa;
-            border-right: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .sidebar-header {
-            padding: 20px;
-            background: #0088cc;
-            color: white;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: white;
-            color: #0088cc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        .menu {
-            flex: 1;
-            padding: 20px 0;
-        }
-        
-        .menu-item {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            color: #333;
-        }
-        
-        .menu-item:hover {
-            background: #e9ecef;
-        }
-        
-        .menu-item.active {
-            background: #e3f2fd;
-            color: #0088cc;
-            border-left: 3px solid #0088cc;
-        }
-        
-        /* Основной контент */
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .welcome-screen {
-            text-align: center;
-        }
-        
-        .welcome-icon {
-            font-size: 60px;
-            color: #0088cc;
-            margin-bottom: 20px;
-        }
-        
-        .welcome-screen h1 {
-            font-size: 32px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .welcome-screen p {
-            color: #666;
-            margin-bottom: 30px;
-        }
-        
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 5px;
-        }
-        
-        .btn-primary {
-            background: #0088cc;
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-        
-        /* Модальное окно входа */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .modal {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
-            text-align: center;
-        }
-        
-        .modal h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        /* Чат окно */
-        .chat-window {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-        }
-        
-        .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .messages-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #f5f5f5;
-        }
-        
-        .message {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-radius: 10px;
-            max-width: 70%;
-        }
-        
-        .message-incoming {
-            background: white;
-            border: 1px solid #ddd;
-        }
-        
-        .message-outgoing {
-            background: #0088cc;
-            color: white;
-            margin-left: auto;
-        }
-        
-        .message-input {
-            padding: 15px;
-            border-top: 1px solid #ddd;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .message-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 16px;
-        }
-        
-        .send-btn {
-            background: #0088cc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        
-        /* Список чатов */
-        .chats-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .chat-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .chat-item:hover {
-            background: #e9ecef;
-        }
-        
-        /* Уведомления */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            animation: slideIn 0.3s;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial; background: #0088cc; }
+        .app { width: 1000px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; }
+        .header { background: #0088cc; color: white; padding: 20px; text-align: center; }
+        .chat-area { display: flex; height: 600px; }
+        .sidebar { width: 300px; background: #f5f5f5; border-right: 1px solid #ddd; }
+        .main-chat { flex: 1; display: flex; flex-direction: column; }
+        .messages { flex: 1; padding: 20px; overflow-y: auto; }
+        .input-area { padding: 15px; border-top: 1px solid #ddd; display: flex; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; }
+        button { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin-left: 10px; cursor: pointer; }
+        .chat-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; }
+        .chat-item:hover { background: #e9ecef; }
+        .message { margin: 10px 0; padding: 10px; border-radius: 10px; max-width: 70%; }
+        .my { background: #0088cc; color: white; margin-left: auto; }
+        .other { background: #e5e5ea; margin-right: auto; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-comment-dots"></i>
-                    <h2>Forsic</h2>
+    <div class="app">
+        <div class="header">
+            <h1>💬 Forsic - Рабочий чат</h1>
+            <p>Общайтесь в реальном времени</p>
+        </div>
+        <div class="chat-area">
+            <div class="sidebar">
+                <div style="padding: 15px;">
+                    <input type="text" placeholder="Поиск чатов" style="width: 100%; padding: 8px;">
                 </div>
-                <div class="user-profile">
-                    <div class="avatar" id="userAvatar">?</div>
-                    <div>
-                        <h4 id="userName">Гость</h4>
-                        <p id="userStatus" style="font-size: 12px; opacity: 0.8;">Войдите в систему</p>
+                <div id="chatsList">
+                    <!-- Чаты появятся здесь -->
+                </div>
+            </div>
+            <div class="main-chat">
+                <div class="messages" id="messages">
+                    <div style="text-align: center; padding: 50px;">
+                        <h3>Добро пожаловать в Forsic!</h3>
+                        <p>Выберите чат слева или создайте новый</p>
                     </div>
                 </div>
-            </div>
-            
-            <div class="menu">
-                <div class="menu-item active" onclick="showSection('chats')">
-                    <i class="fas fa-comments"></i>
-                    <span>Чаты</span>
-                </div>
-                <div class="menu-item" onclick="showSection('contacts')">
-                    <i class="fas fa-users"></i>
-                    <span>Контакты</span>
-                </div>
-                <div class="menu-item" onclick="showSection('settings')">
-                    <i class="fas fa-cog"></i>
-                    <span>Настройки</span>
+                <div class="input-area">
+                    <input type="text" id="messageInput" placeholder="Введите сообщение...">
+                    <button onclick="sendMessage()">Отправить</button>
                 </div>
             </div>
-        </div>
-        
-        <div class="main-content" id="mainContent">
-            <div class="welcome-screen">
-                <div class="welcome-icon">
-                    <i class="fas fa-comment-dots"></i>
-                </div>
-                <h1>Добро пожаловать в Forsic</h1>
-                <p>Современный мессенджер для общения</p>
-                <button class="btn btn-primary" onclick="showLogin()">
-                    <i class="fas fa-sign-in-alt"></i> Начать общение
-                </button>
-            </div>
-        </div>
-        
-        <div class="chat-window" id="chatWindow">
-            <!-- Чат будет загружен здесь -->
         </div>
     </div>
-    
-    <!-- Модальное окно входа -->
-    <div class="modal-overlay" id="loginModal" style="display: none;">
-        <div class="modal">
-            <h2><i class="fas fa-comment-dots"></i> Forsic</h2>
-            <p>Войдите в свой аккаунт</p>
-            
-            <div class="input-group">
-                <label for="loginName">Ваше имя:</label>
-                <input type="text" id="loginName" placeholder="Введите ваше имя">
-            </div>
-            
-            <div class="input-group">
-                <label for="loginPhone">Номер телефона:</label>
-                <input type="tel" id="loginPhone" placeholder="Введите номер телефона">
-            </div>
-            
-            <button class="btn btn-primary" onclick="login()" style="width: 100%; margin-top: 20px;">
-                <i class="fas fa-sign-in-alt"></i> Войти в Forsic
-            </button>
-            
-            <p style="margin-top: 15px; font-size: 12px; color: #666;">
-                Нажимая "Войти", вы принимаете условия использования
-            </p>
-        </div>
-    </div>
-    
-    <!-- Уведомления -->
-    <div id="notifications"></div>
-    
+
     <script>
-        // Данные приложения
-        let currentUser = null;
-        let chats = [];
-        let onlineUsers = [
-            { id: 1, name: "Алексей Иванов", online: true },
-            { id: 2, name: "Мария Петрова", online: true },
-            { id: 3, name: "Иван Сидоров", online: false },
-            { id: 4, name: "Ольга Кузнецова", online: true }
+        // Данные пользователей
+        const users = [
+            { id: 1, name: "Алексей", online: true },
+            { id: 2, name: "Мария", online: true },
+            { id: 3, name: "Иван", online: false },
+            { id: 4, name: "Ольга", online: true }
         ];
         
-        // Показать окно входа
-        function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
-            document.getElementById('loginName').focus();
-        }
+        // Текущий пользователь
+        let currentUser = null;
+        let currentChat = null;
         
-        // Вход в систему
-        function login() {
-            const name = document.getElementById('loginName').value.trim();
-            const phone = document.getElementById('loginPhone').value.trim();
-            
-            if (!name || !phone) {
-                showNotification('Заполните все поля!', 'error');
-                return;
-            }
-            
-            // Создаем пользователя
-            currentUser = {
-                id: Date.now(),
-                name: name,
-                phone: phone,
-                avatar: name.charAt(0).toUpperCase(),
-                online: true
-            };
-            
-            // Сохраняем в localStorage
-            localStorage.setItem('forsic_user', JSON.stringify(currentUser));
-            
-            // Обновляем интерфейс
-            updateUserInfo();
-            
-            // Скрываем модальное окно
-            document.getElementById('loginModal').style.display = 'none';
-            
-            // Показываем уведомление
-            showNotification(`Добро пожаловать, ${name}!`, 'success');
+        // Инициализация
+        window.onload = function() {
+            // Запрашиваем имя
+            const userName = prompt("Введите ваше имя:", "Гость");
+            currentUser = { id: 0, name: userName, online: true };
             
             // Загружаем чаты
             loadChats();
-            showSection('chats');
-        }
-        
-        // Обновить информацию о пользователе
-        function updateUserInfo() {
-            if (!currentUser) return;
             
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userAvatar').textContent = currentUser.avatar;
-            document.getElementById('userStatus').textContent = 'онлайн';
-        }
+            // Показываем уведомление
+            alert("Добро пожаловать, " + userName + "!");
+        };
         
-        // Показать секцию
-        function showSection(section) {
-            const mainContent = document.getElementById('mainContent');
-            
-            if (section === 'chats') {
-                mainContent.innerHTML = `
-                    <div style="width: 100%;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2>Чаты</h2>
-                            <button class="btn btn-primary" onclick="startNewChat()">
-                                <i class="fas fa-plus"></i> Новый чат
-                            </button>
-                        </div>
-                        <div class="chats-list" id="chatsList">
-                            <!-- Чаты загрузятся здесь -->
-                        </div>
-                    </div>
-                `;
-                loadChatsList();
-            }
-            else if (section === 'contacts') {
-                mainContent.innerHTML = `
-                    <div style="width: 100%;">
-                        <h2>Контакты</h2>
-                        <div style="margin: 20px 0;">
-                            <input type="text" placeholder="Поиск контактов..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div id="contactsList">
-                            <!-- Контакты загрузятся здесь -->
-                        </div>
-                    </div>
-                `;
-                loadContacts();
-            }
-            else if (section === 'settings') {
-                mainContent.innerHTML = `
-                    <div style="width: 100%;">
-                        <h2>Настройки</h2>
-                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                            <h3>Ваш профиль</h3>
-                            <p>Имя: ${currentUser ? currentUser.name : 'Не указано'}</p>
-                            <p>Телефон: ${currentUser ? currentUser.phone : 'Не указан'}</p>
-                            <button class="btn btn-secondary" onclick="logout()" style="margin-top: 15px;">
-                                <i class="fas fa-sign-out-alt"></i> Выйти
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Обновляем активный пункт меню
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.menu-item').classList.add('active');
-        }
-        
-        // Загрузить список чатов
-        function loadChatsList() {
+        // Загрузить чаты
+        function loadChats() {
             const chatsList = document.getElementById('chatsList');
-            if (!chatsList) return;
+            chatsList.innerHTML = '';
             
-            if (chats.length === 0) {
-                chatsList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-comments" style="font-size: 40px; margin-bottom: 10px;"></i>
-                        <p>У вас пока нет чатов</p>
-                        <button class="btn btn-primary" onclick="startNewChat()" style="margin-top: 10px;">
-                            Начать новый чат
-                        </button>
-                    </div>
+            users.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'chat-item';
+                div.innerHTML = `
+                    <strong>${user.name}</strong>
+                    <span style="float: right; color: ${user.online ? 'green' : 'gray'}; font-size: 12px;">
+                        ${user.online ? '🟢' : '⚫'}
+                    </span>
+                    <p style="color: gray; font-size: 12px;">${user.online ? 'онлайн' : 'оффлайн'}</p>
                 `;
-                return;
-            }
-            
-            chatsList.innerHTML = chats.map(chat => `
-                <div class="chat-item" onclick="openChat('${chat.id}')">
-                    <div class="avatar" style="background: #${Math.floor(Math.random()*16777215).toString(16)}">
-                        ${chat.name.charAt(0)}
-                    </div>
-                    <div style="flex: 1;">
-                        <h4>${chat.name}</h4>
-                        <p>${chat.lastMessage || 'Нет сообщений'}</p>
-                    </div>
-                    <div style="font-size: 12px; color: #666;">
-                        ${chat.time || ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // Загрузить контакты
-        function loadContacts() {
-            const contactsList = document.getElementById('contactsList');
-            if (!contactsList) return;
-            
-            contactsList.innerHTML = onlineUsers.map(user => `
-                <div class="chat-item">
-                    <div class="avatar" style="background: #${Math.floor(Math.random()*16777215).toString(16)}">
-                        ${user.name.charAt(0)}
-                    </div>
-                    <div style="flex: 1;">
-                        <h4>${user.name}</h4>
-                        <p>${user.online ? '🟢 онлайн' : '⚫ оффлайн'}</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="startChatWithUser(${user.id})">
-                        Написать
-                    </button>
-                </div>
-            `).join('');
-        }
-        
-        // Начать новый чат
-        function startNewChat() {
-            showNotification('Выберите контакт из списка "Контакты"', 'info');
-            showSection('contacts');
-        }
-        
-        // Начать чат с пользователем
-        function startChatWithUser(userId) {
-            const user = onlineUsers.find(u => u.id === userId);
-            if (!user) return;
-            
-            // Создаем чат
-            const chatId = 'chat_' + Date.now();
-            const chat = {
-                id: chatId,
-                name: user.name,
-                messages: []
-            };
-            
-            // Добавляем в список чатов
-            if (!chats.find(c => c.name === user.name)) {
-                chats.push(chat);
-                localStorage.setItem('forsic_chats', JSON.stringify(chats));
-            }
-            
-            // Открываем чат
-            openChat(chatId);
+                div.onclick = () => openChat(user);
+                chatsList.appendChild(div);
+            });
         }
         
         // Открыть чат
-        function openChat(chatId) {
-            const chat = chats.find(c => c.id === chatId);
-            if (!chat) return;
+        function openChat(user) {
+            currentChat = user;
             
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('chatWindow').style.display = 'flex';
+            // Обновляем заголовок
+            document.querySelector('.header h1').innerHTML = `💬 Чат с ${user.name}`;
             
-            document.getElementById('chatWindow').innerHTML = `
-                <div class="chat-header">
-                    <button class="btn btn-secondary" onclick="closeChat()" style="background: none; border: none; font-size: 18px;">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <div class="avatar">${chat.name.charAt(0)}</div>
-                    <div>
-                        <h3>${chat.name}</h3>
-                        <p style="font-size: 12px; color: #666;">онлайн</p>
-                    </div>
+            // Загружаем сообщения
+            const messages = document.getElementById('messages');
+            messages.innerHTML = `
+                <div class="message other">
+                    <strong>${user.name}</strong><br>
+                    Привет! Как дела?
                 </div>
-                
-                <div class="messages-container" id="messagesContainer">
-                    ${chat.messages.length > 0 ? chat.messages.map(msg => `
-                        <div class="message ${msg.outgoing ? 'message-outgoing' : 'message-incoming'}">
-                            ${msg.text}
-                            <div style="font-size: 11px; text-align: right; margin-top: 5px;">
-                                ${msg.time}
-                            </div>
-                        </div>
-                    `).join('') : `
-                        <div style="text-align: center; padding: 40px; color: #666;">
-                            <p>Начните общение с ${chat.name}</p>
-                        </div>
-                    `}
-                </div>
-                
-                <div class="message-input">
-                    <input type="text" id="messageInput" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter') sendMessage('${chatId}')">
-                    <button class="send-btn" onclick="sendMessage('${chatId}')">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                <div class="message my">
+                    <strong>${currentUser.name}</strong><br>
+                    Привет! Хорошо, а у тебя?
                 </div>
             `;
-        }
-        
-        // Закрыть чат
-        function closeChat() {
-            document.getElementById('chatWindow').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'flex';
-            showSection('chats');
+            
+            // Прокручиваем вниз
+            messages.scrollTop = messages.scrollHeight;
         }
         
         // Отправить сообщение
-        function sendMessage(chatId) {
+        function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
             
             if (!text) return;
             
-            const chat = chats.find(c => c.id === chatId);
-            if (!chat) return;
+            if (!currentChat) {
+                alert("Сначала выберите чат!");
+                return;
+            }
             
-            // Добавляем сообщение
-            const message = {
-                id: Date.now(),
-                text: text,
-                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                outgoing: true
-            };
+            const messages = document.getElementById('messages');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             
-            chat.messages.push(message);
-            chat.lastMessage = text;
-            chat.time = message.time;
+            // Добавляем наше сообщение
+            const myMsg = document.createElement('div');
+            myMsg.className = 'message my';
+            myMsg.innerHTML = `<strong>${currentUser.name}</strong><br>${text}<br><small>${time}</small>`;
+            messages.appendChild(myMsg);
             
-            // Сохраняем
-            localStorage.setItem('forsic_chats', JSON.stringify(chats));
-            
-            // Обновляем UI
-            const messagesContainer = document.getElementById('messagesContainer');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message message-outgoing';
-            messageDiv.innerHTML = `
-                ${text}
-                <div style="font-size: 11px; text-align: right; margin-top: 5px;">
-                    ${message.time}
-                </div>
-            `;
-            messagesContainer.appendChild(messageDiv);
-            
-            // Очищаем поле ввода
             input.value = '';
-            input.focus();
             
-            // Прокручиваем вниз
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            // Имитация ответа
+            // Имитация ответа через 1-2 секунды
             setTimeout(() => {
                 const replies = [
-                    'Привет! Как дела?',
-                    'Интересно...',
-                    'Давай обсудим это позже',
-                    'Согласен!',
-                    'Спасибо за сообщение!'
+                    "Привет! Как дела?",
+                    "Интересно...",
+                    "Давай обсудим это",
+                    "Согласен!",
+                    "Спасибо за сообщение!"
                 ];
                 const reply = replies[Math.floor(Math.random() * replies.length)];
                 
-                const replyMessage = {
-                    id: Date.now(),
-                    text: reply,
-                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                    outgoing: false
-                };
+                const theirMsg = document.createElement('div');
+                theirMsg.className = 'message other';
+                theirMsg.innerHTML = `<strong>${currentChat.name}</strong><br>${reply}<br><small>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>`;
+                messages.appendChild(theirMsg);
                 
-                chat.messages.push(replyMessage);
-                localStorage.setItem('forsic_chats', JSON.stringify(chats));
-                
-                const replyDiv = document.createElement('div');
-                replyDiv.className = 'message message-incoming';
-                replyDiv.innerHTML = `
-                    ${reply}
-                    <div style="font-size: 11px; text-align: right; margin-top: 5px;">
-                        ${replyMessage.time}
-                    </div>
-                `;
-                messagesContainer.appendChild(replyDiv);
-                
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }, 1000 + Math.random() * 2000);
+                // Прокручиваем вниз
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000 + Math.random() * 1000);
         }
         
-        // Загрузить чаты из localStorage
-        function loadChats() {
-            const savedChats = localStorage.getItem('forsic_chats');
-            if (savedChats) {
-                chats = JSON.parse(savedChats);
+        // Отправка по Enter
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
-        }
-        
-        // Выйти из системы
-        function logout() {
-            if (confirm('Вы уверены, что хотите выйти?')) {
-                currentUser = null;
-                localStorage.removeItem('forsic_user');
-                location.reload();
-            }
-        }
-        
-        // Показать уведомление
-        function showNotification(message, type = 'info') {
-            const notifications = document.getElementById('notifications');
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.background = type === 'error' ? '#dc3545' : 
-                                           type === 'success' ? '#28a745' : '#333';
-            notification.textContent = message;
-            
-            notifications.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-        
-        // Инициализация при загрузке
-        window.onload = function() {
-            // Проверяем, есть ли сохраненный пользователь
-            const savedUser = localStorage.getItem('forsic_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                updateUserInfo();
-                loadChats();
-                showSection('chats');
-            }
-        };
+        });
     </script>
 </body>
 </html>
