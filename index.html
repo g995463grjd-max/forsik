@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forsic - Современный мессенджер</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0d1117; color: #f0f6fc; height: 100vh; }
+        .app { display: flex; height: 100vh; }
+        .sidebar { width: 280px; background: #161b22; border-right: 1px solid #30363d; padding: 20px; }
+        .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; color: #0088cc; font-size: 24px; }
+        .menu { display: flex; flex-direction: column; gap: 10px; }
+        .menu-item { padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .menu-item:hover { background: #21262d; }
+        .menu-item.active { background: #21262d; color: #0088cc; }
+        .main { flex: 1; padding: 30px; display: flex; align-items: center; justify-content: center; }
+        .welcome { text-align: center; }
+        .welcome h1 { font-size: 36px; margin-bottom: 20px; color: #0088cc; }
+        .welcome p { color: #8b949e; margin-bottom: 30px; }
+        .btn { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #0088cc; color: white; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+        .modal-content { background: #161b22; padding: 30px; border-radius: 12px; width: 400px; }
+        .input-group { margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: white; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-comment-dots"></i>
+                <h2>Forsic</h2>
+            </div>
+            <div class="menu">
+                <div class="menu-item active"><i class="fas fa-comments"></i> Чаты</div>
+                <div class="menu-item"><i class="fas fa-users"></i> Контакты</div>
+                <div class="menu-item"><i class="fas fa-cog"></i> Настройки</div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="welcome">
+                <h1>Добро пожаловать в Forsic</h1>
+                <p>Современный мессенджер для общения в реальном времени</p>
+                <button class="btn btn-primary" onclick="showLogin()">Начать общение</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">Вход в Forsic</h2>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Ваше имя">
+            </div>
+            <div class="input-group">
+                <input type="text" id="phone" placeholder="Номер телефона">
+            </div>
+            <button class="btn btn-primary" onclick="login()" style="width: 100%; margin-top: 20px;">Войти</button>
+        </div>
+    </div>
+
+    <script>
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (!username || !phone) {
+                alert('Заполните все поля!');
+                return;
+            }
+            
+            alert('Добро пожаловать, ' + username + '!');
+            document.getElementById('loginModal').style.display = 'none';
+            
+            // Переходим к чатам
+            document.querySelector('.welcome').innerHTML = `
+                <h1>Рады видеть, ${username}!</h1>
+                <p>Теперь вы можете начать общение</p>
+                <div style="margin-top: 30px;">
+                    <div style="background: #21262d; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>Алексей</strong><br>
+                        Привет! Как дела?
+                    </div>
+                    <div style="background: #21262d; padding: 15px; border-radius: 8px;">
+                        <strong>Мария</strong><br>
+                        Жду тебя завтра
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
